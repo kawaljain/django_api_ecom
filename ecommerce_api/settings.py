@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9ql4nb#k)d#ph(t=ff@t#keklwn6(qum*s^$4233ec6&^kx5(i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+# DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'true') == 'true'
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'product',
+    'core',
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [
@@ -79,7 +83,15 @@ DATABASES = {
     }
 }
 
-
+# Django REST Framework config
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        ('rest_framework.renderers.JSONRenderer',) if not DEBUG else (
+            'rest_framework.renderers.JSONRenderer',
+            'rest_framework.renderers.BrowsableAPIRenderer',
+        )
+    )
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
